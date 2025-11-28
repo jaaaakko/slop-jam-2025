@@ -12,3 +12,7 @@
 - Debugged "enemies not spawning" issue; found `EnemyBrain` was using 3D movement logic (zeroing Y axis, rotating Forward) which likely made them invisible/stuck. Fixed to use 2D XY movement and Z-axis rotation. Added debug logs to EnemySpawner.
 - Fixed "ammo not hitting enemies" bug by setting Projectile collider to Trigger, adding BoxCollider2D to Enemy prefab, and removing duplicate HealthComponent from Enemy.
 - Fixed "game continues after 0 health" bug by making GameOverView self-initialize and subscribe to Player death event (bypassing missing GameDirector).
+- Refactored sprite swapping logic into a generic `DirectionalSprite` component. Refactored `PlayerController` to use it, and attached it to `Player.prefab` and `Enemy.prefab` to support directional sprites for all characters.
+- Fixed Player sprite locking issue by disabling `autoUpdateFromSelf` in DirectionalSprite component on Player prefab.
+- Restored missing `BoxCollider2D` on Enemy prefab.
+- Added `DestroyOnDeath` component to Enemy prefab to ensure enemies disappear when killed.

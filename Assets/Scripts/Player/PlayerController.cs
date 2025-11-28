@@ -10,15 +10,9 @@ namespace SlopJam.Player
         [SerializeField] private float rotationSmoothTime = 0.05f;
         [SerializeField] private float rotationOffset = 0f; // Adjust if sprite faces Up (90) instead of Right (0)
 
-        [Header("Visuals")]
-        [SerializeField] private SpriteRenderer spriteRenderer;
-        [SerializeField] private Sprite spriteUp;
-        [SerializeField] private Sprite spriteDown;
-        [SerializeField] private Sprite spriteLeft;
-        [SerializeField] private Sprite spriteRight;
-
         [Header("Aiming")]
         [SerializeField] private Transform aimPivot;
+        [SerializeField] private DirectionalSprite directionalSprite;
 
         private PlayerRuntime runtime;
         private InputService inputService;
@@ -27,7 +21,7 @@ namespace SlopJam.Player
         private void Awake()
         {
             runtime = GetComponent<PlayerRuntime>();
-            if (spriteRenderer == null) spriteRenderer = GetComponent<SpriteRenderer>();
+            if (directionalSprite == null) directionalSprite = GetComponent<DirectionalSprite>();
         }
 
         private void Start()
@@ -56,7 +50,6 @@ namespace SlopJam.Player
 
             HandleMovement();
             HandleShooting();
-            UpdateVisuals();
         }
 
         private void HandleMovement()
@@ -71,6 +64,11 @@ namespace SlopJam.Player
             {
                 aimDirection = new Vector3(aim.x, aim.y, 0f).normalized;
                 
+                if (directionalSprite != null)
+                {
+                    directionalSprite.SetDirection(aimDirection);
+                }
+
                 if (aimPivot != null)
                 {
                     // Rotate the pivot (weapon) instead of the whole player
@@ -88,45 +86,6 @@ namespace SlopJam.Player
                     var targetRotation = Quaternion.Euler(0f, 0f, angle + rotationOffset);
                     transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, Time.deltaTime / rotationSmoothTime);
                 }
-            }
-        }
-
-        private void UpdateVisuals()
-        {
-            if (spriteRenderer == null) return;
-
-            // Determine angle from aimDirection
-            var angle = Mathf.Atan2(aimDirection.y, aimDirection.x) * Mathf.Rad2Deg;
-            if (angle < 0) angle += 360f;
-
-            // 0 is Right. 90 is Up. 180 is Left. 270 is Down.
-            // Right: 315 to 45
-            // Up: 45 to 135
-            // Left: 135 to 225
-            // Down: 225 to 315
-
-            Sprite targetSprite = spriteRight; // Default
-
-            if (angle > 45f && angle <= 135f)
-            {
-                targetSprite = spriteUp;
-            }
-            else if (angle > 135f && angle <= 225f)
-            {
-                targetSprite = spriteLeft;
-            }
-            else if (angle > 225f && angle <= 315f)
-            {
-                targetSprite = spriteDown;
-            }
-            else
-            {
-                targetSprite = spriteRight;
-            }
-
-            if (targetSprite != null && spriteRenderer.sprite != targetSprite)
-            {
-                spriteRenderer.sprite = targetSprite;
             }
         }
 

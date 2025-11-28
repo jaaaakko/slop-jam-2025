@@ -12,7 +12,9 @@ GameObject:
   - component: {fileID: 6299101560096202677}
   - component: {fileID: 4789697090950815745}
   - component: {fileID: 1695944541155707104}
+  - component: {fileID: 1122334455}
   - component: {fileID: 4488112233}
+  - component: {fileID: 2233445566}
   m_Layer: 0
   m_Name: Enemy
   m_TagString: Untagged
@@ -29,8 +31,8 @@ Transform:
   m_GameObject: {fileID: 2394191065239733856}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -1.97815, y: -0.96006, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalPosition: {x: -1.9781, y: -0.96006, z: 0}
+  m_LocalScale: {x: 0.267, y: 0.2849, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
@@ -120,6 +122,25 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::SlopJam.Enemies.EnemyBrain
   config: {fileID: 11400000, guid: 747120acba776474991e568065c806b2, type: 2}
   stoppingDistance: 0.75
+--- !u!114 &1122334455
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2394191065239733856}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a1b2c3d4e5f678901234567890abcdef, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::SlopJam.Core.DirectionalSprite
+  spriteUp: {fileID: -2106873398, guid: 1afebe4ffc38d41d38830f74d5f28e26, type: 3}
+  spriteDown: {fileID: -1980461944, guid: 1afebe4ffc38d41d38830f74d5f28e26, type: 3}
+  spriteLeft: {fileID: -1981608886, guid: 1afebe4ffc38d41d38830f74d5f28e26, type: 3}
+  spriteRight: {fileID: -1176593340, guid: 1afebe4ffc38d41d38830f74d5f28e26, type: 3}
+  rotationTarget: {fileID: 0}
+  useVelocity: 0
+  velocityThreshold: 0.1
 --- !u!61 &4488112233
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -165,4 +186,16 @@ BoxCollider2D:
     adaptiveTiling: 0
   m_AutoTiling: 0
   m_Size: {x: 1, y: 1}
-  m_EdgeRadius: 0
+--- !u!114 &2233445566
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2394191065239733856}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b2c3d4e5f678901234567890abcdef12, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::SlopJam.Core.DestroyOnDeath
+  delay: 0.1

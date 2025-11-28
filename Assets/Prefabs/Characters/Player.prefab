@@ -104,6 +104,7 @@ GameObject:
   - component: {fileID: 1496205603988338656}
   - component: {fileID: 371668856065721581}
   - component: {fileID: 8335318039730619770}
+  - component: {fileID: 5489590229955011988}
   m_Layer: 0
   m_Name: Player
   m_TagString: Untagged
@@ -226,12 +227,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::SlopJam.Player.PlayerController
   rotationSmoothTime: 0.05
   rotationOffset: 0
-  spriteRenderer: {fileID: 5489834337834169384}
-  spriteUp: {fileID: 589916845, guid: 939265babc6e5470a8822a3ee5740742, type: 3}
-  spriteDown: {fileID: -2084552089, guid: 939265babc6e5470a8822a3ee5740742, type: 3}
-  spriteLeft: {fileID: 1600715155, guid: 939265babc6e5470a8822a3ee5740742, type: 3}
-  spriteRight: {fileID: -1685536238, guid: 939265babc6e5470a8822a3ee5740742, type: 3}
   aimPivot: {fileID: 0}
+  directionalSprite: {fileID: 5489590229955011988}
 --- !u!114 &8335318039730619770
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -245,3 +242,23 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::SlopJam.Combat.WeaponController
   muzzle: {fileID: 1710694572107260072}
+--- !u!114 &5489590229955011988
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8736956497246738276}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a1b2c3d4e5f678901234567890abcdef, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::SlopJam.Core.DirectionalSprite
+  spriteUp: {fileID: 589916845, guid: 939265babc6e5470a8822a3ee5740742, type: 3}
+  spriteDown: {fileID: -2084552089, guid: 939265babc6e5470a8822a3ee5740742, type: 3}
+  spriteLeft: {fileID: 1600715155, guid: 939265babc6e5470a8822a3ee5740742, type: 3}
+  spriteRight: {fileID: -1685536238, guid: 939265babc6e5470a8822a3ee5740742, type: 3}
+  rotationTarget: {fileID: 0}
+  useVelocity: 0
+  autoUpdateFromSelf: 0
+  velocityThreshold: 0.1
