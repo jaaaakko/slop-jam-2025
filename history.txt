@@ -5,4 +5,4 @@
 - Created enemy configs/brains/spawner plus DamageSystem/request flow.
 - Added GameDirector orchestrator and UI Toolkit HUD/GameOver document (GameHUD.uxml/uss) with HUDDocumentView, wiring controllers to UI.
 - Iterated on input/aim/shoot issues: legacy input support, direct movement, 2D aiming, projectile spawning warnings, Rigidbody2D collisions, corrected rotation to match mouse.
-
+- Fixed player rotation issue where `Camera.main` was picking up the Bootstrap camera instead of the Gameplay camera; removed redundant Main Camera from Bootstrap scene.
