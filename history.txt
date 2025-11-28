@@ -17,3 +17,4 @@
 - Restored missing `BoxCollider2D` on Enemy prefab.
 - Added `DestroyOnDeath` component to Enemy prefab to ensure enemies disappear when killed.
 - Implemented on-hit damage flash effect using `DamageFlash` component; attached to Player and Enemy prefabs.
+- Wired up Retry and Quit buttons in GameOverView. Retry reloads the GameBootstrap scene.

@@ -1,6 +1,7 @@
 using SlopJam.Player;
 using UnityEngine;
 using UnityEngine.Events;
+using UnityEngine.SceneManagement;
 
 namespace SlopJam.UI
 {
@@ -17,7 +18,29 @@ namespace SlopJam.UI
             {
                 player.Health.OnDeath += HandlePlayerDeath;
             }
+
+            if (documentView != null)
+            {
+                documentView.RetryRequested += HandleRetry;
+                documentView.QuitRequested += HandleQuit;
+            }
+
             Hide();
+        }
+
+        private void HandleRetry()
+        {
+            Time.timeScale = 1f;
+            SceneManager.LoadScene("GameBootstrap");
+        }
+
+        private void HandleQuit()
+        {
+            #if UNITY_EDITOR
+                UnityEditor.EditorApplication.isPlaying = false;
+            #else
+                Application.Quit();
+            #endif
         }
 
         private void HandlePlayerDeath()
