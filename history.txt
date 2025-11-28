@@ -24,3 +24,8 @@
 - Updated FloorGenerator to support multiple tiles with Perlin noise variation.
 - Added .DS_Store to .gitignore and cleaned up existing .DS_Store files.
 - Updated DamageFlash to use custom SpriteFlash shader for proper white-out effect on dark sprites.
+- Fixed Spike Wall interactions: implemented `IKnockbackable` interface, added physics-based knockback to `PlayerController` and `EnemyBrain`.
+- Resolved game freeze by fixing infinite loop in `EnemySpawner` when looking for valid spawn points.
+- Fixed player walking through walls by adding `Rigidbody2D` (kinematic/dynamic mix resolved) and `Collider2D` to Player prefab/controller logic.
+- Fixed player knockback direction on Spike Walls by using collision normals from `OnCollisionEnter2D` instead of center-point triggers.
+- Fixed Left Wall collision issue (player walking through rotated wall) by auto-resizing `BoxCollider2D` to match Tiled/Sliced sprite dimensions in `SpikeWallDamage`.
