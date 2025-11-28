@@ -274,5 +274,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c3d4e5f678901234567890abcdef1234, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::SlopJam.Effects.DamageFlash
-  flashColor: {r: 1, g: 0, b: 0, a: 1}
+  flashColor: {r: 1, g: 1, b: 1, a: 1}
   flashDuration: 0.1

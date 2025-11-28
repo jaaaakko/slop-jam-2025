@@ -23,3 +23,4 @@
 - Configured floor to use `tiles_0` sprite, scaled down to 0.5, and centered at (-15, -3) to cover the gameplay area properly.
 - Updated FloorGenerator to support multiple tiles with Perlin noise variation.
 - Added .DS_Store to .gitignore and cleaned up existing .DS_Store files.
+- Updated DamageFlash to use custom SpriteFlash shader for proper white-out effect on dark sprites.
