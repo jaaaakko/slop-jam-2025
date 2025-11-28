@@ -12,9 +12,21 @@ namespace SlopJam.Gameplay
         [SerializeField] private EnemySpawner enemySpawner;
         [SerializeField] private HUDController hudController;
         [SerializeField] private GameOverView gameOverView;
+        [SerializeField] private Camera gameplayCamera;
 
         private void Start()
         {
+            if (gameplayCamera == null) 
+            {
+                gameplayCamera = Camera.main;
+            }
+
+            if (ServiceLocator.TryResolve(out InputService inputService))
+            {
+                // Ensure InputService uses the correct camera for this scene
+                inputService.SetCamera(gameplayCamera);
+            }
+
             if (player == null)
             {
                 Debug.LogError("GameDirector requires a PlayerRuntime reference.");

@@ -14,10 +14,16 @@ namespace SlopJam.Core
         public bool IsShooting { get; private set; }
 
         [SerializeField] private Transform aimOrigin;
+        private Camera explicitCamera;
 
         public void SetAimOrigin(Transform origin)
         {
             aimOrigin = origin;
+        }
+
+        public void SetCamera(Camera camera)
+        {
+            explicitCamera = camera;
         }
 
         private void Update()
@@ -44,17 +50,16 @@ namespace SlopJam.Core
                 return;
             }
 
-            var camera = Camera.main;
+            var camera = explicitCamera != null ? explicitCamera : Camera.main;
             if (camera == null)
             {
                 return;
             }
 
             var mouse = Input.mousePosition;
-            if (!camera.orthographic)
-            {
-                mouse.z = Mathf.Abs(camera.transform.position.z - aimOrigin.position.z);
-            }
+            // For ScreenToWorldPoint, we need to set Z to the distance from camera to the target plane
+            // For orthographic cameras, this is typically the distance along the camera's forward axis
+            mouse.z = Mathf.Abs(camera.transform.position.z - aimOrigin.position.z);
 
             var world = camera.ScreenToWorldPoint(mouse);
             var direction = world - aimOrigin.position;

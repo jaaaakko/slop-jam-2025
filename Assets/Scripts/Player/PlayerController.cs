@@ -8,11 +8,12 @@ namespace SlopJam.Player
     public class PlayerController : MonoBehaviour
     {
         [SerializeField] private float rotationSmoothTime = 0.05f;
+        [SerializeField] private float rotationOffset = -90f; // Adjust if sprite faces Up (90) instead of Right (0)
 
         private PlayerRuntime runtime;
         private InputService inputService;
         private Vector3 aimDirection = Vector3.up;
-
+        
         private void Awake()
         {
             runtime = GetComponent<PlayerRuntime>();
@@ -49,8 +50,12 @@ namespace SlopJam.Player
             if (aim.sqrMagnitude > 0.0001f)
             {
                 aimDirection = new Vector3(aim.x, aim.y, 0f).normalized;
-                var targetRotation = Quaternion.LookRotation(Vector3.forward, aimDirection);
-                transform.rotation = Quaternion.RotateTowards(transform.rotation, targetRotation, rotationSmoothTime * 360f * Time.deltaTime);
+                // Calculate angle in degrees for 2D rotation (rotate around Z-axis)
+                var angle = Mathf.Atan2(aimDirection.y, aimDirection.x) * Mathf.Rad2Deg;
+                // Apply offset
+                var targetRotation = Quaternion.Euler(0f, 0f, angle + rotationOffset);
+                // Use Slerp for smooth rotation
+                transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, Time.deltaTime / rotationSmoothTime);
             }
         }
 
