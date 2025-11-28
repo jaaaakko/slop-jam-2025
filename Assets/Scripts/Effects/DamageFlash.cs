@@ -9,13 +9,15 @@ namespace SlopJam.Effects
     public class DamageFlash : MonoBehaviour
     {
         [SerializeField] private Color flashColor = Color.white;
-        [SerializeField] private float flashDuration = 0.1f;
+        [SerializeField, Min(0.01f)] private float flashDuration = 0.1f;
+        [SerializeField] private bool loopDuringInvulnerability = true;
 
         private SpriteRenderer spriteRenderer;
         private HealthComponent health;
         private Material flashMaterial;
         private Coroutine flashRoutine;
         private WaitForSeconds flashDelay;
+        private Color originalColor;
         private int lastHealth;
         private static readonly int FlashColorId = Shader.PropertyToID("_FlashColor");
         private static readonly int FlashAmountId = Shader.PropertyToID("_FlashAmount");
@@ -24,6 +26,8 @@ namespace SlopJam.Effects
         {
             spriteRenderer = GetComponent<SpriteRenderer>();
             health = GetComponent<HealthComponent>();
+            originalColor = spriteRenderer.color;
+            flashDelay = new WaitForSeconds(Mathf.Max(0.01f, flashDuration));
             
             var shader = Shader.Find("SlopJam/SpriteFlash");
             if (shader != null)
@@ -46,6 +50,12 @@ namespace SlopJam.Effects
                 health.OnHealthChanged -= HandleHealthChanged;
             }
             
+            if (flashRoutine != null)
+            {
+                StopCoroutine(flashRoutine);
+                ResetFlashVisuals();
+            }
+            
             if (flashMaterial != null)
             {
                 Destroy(flashMaterial);
@@ -66,30 +76,22 @@ namespace SlopJam.Effects
             if (flashRoutine != null)
             {
                 StopCoroutine(flashRoutine);
-                // Reset
-                if (flashMaterial != null) flashMaterial.SetFloat(FlashAmountId, 0f);
-                else spriteRenderer.color = Color.white; // Assuming white is default tint
+                ResetFlashVisuals();
             }
             flashRoutine = StartCoroutine(FlashRoutine());
         }
 
         private IEnumerator FlashRoutine()
         {
-            if (flashMaterial != null)
+            do
             {
-                flashMaterial.SetColor(FlashColorId, flashColor);
-                flashMaterial.SetFloat(FlashAmountId, 1f);
-                yield return new WaitForSeconds(flashDuration);
-                flashMaterial.SetFloat(FlashAmountId, 0f);
+                ApplyFlashVisuals();
+                yield return flashDelay;
+                ResetFlashVisuals();
+                yield return flashDelay;
             }
-            else
-            {
-                // Fallback
-                var prevColor = spriteRenderer.color;
-                spriteRenderer.color = flashColor;
-                yield return new WaitForSeconds(flashDuration);
-                spriteRenderer.color = prevColor;
-            }
+            while (loopDuringInvulnerability && health.IsInvulnerable);
+
             flashRoutine = null;
         }
 

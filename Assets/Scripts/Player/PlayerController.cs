@@ -5,7 +5,7 @@ using UnityEngine;
 namespace SlopJam.Player
 {
     [RequireComponent(typeof(PlayerRuntime))]
-    public class PlayerController : MonoBehaviour
+    public class PlayerController : MonoBehaviour, IKnockbackable
     {
         [SerializeField] private float rotationSmoothTime = 0.05f;
         [SerializeField] private float rotationOffset = 0f; // Adjust if sprite faces Up (90) instead of Right (0)

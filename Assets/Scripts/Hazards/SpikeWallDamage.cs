@@ -53,9 +53,26 @@ namespace SlopJam.Hazards
             TryDamage(other);
         }
 
-        private void TryDamage(Collider2D other)
+        private void OnCollisionEnter2D(Collision2D collision)
         {
-            if (!other.TryGetComponent(out HealthComponent health))
+            TryDamage(collision.collider, collision.GetContact(0).normal);
+        }
+
+        private void OnCollisionStay2D(Collision2D collision)
+        {
+            TryDamage(collision.collider, collision.GetContact(0).normal);
+        }
+
+        private void TryDamage(Collider2D other, Vector3? overrideDirection = null)
+        {
+            // Check on object or parent for HealthComponent
+            HealthComponent health = other.GetComponent<HealthComponent>();
+            if (health == null)
+            {
+                health = other.GetComponentInParent<HealthComponent>();
+            }
+
+            if (health == null)
             {
                 return;
             }
@@ -70,22 +87,40 @@ namespace SlopJam.Hazards
                 return;
             }
 
-            if (other.TryGetComponent(out PlayerController player))
+            // Check on object or parent for IKnockbackable
+            IKnockbackable knockbackable = other.GetComponent<IKnockbackable>();
+            if (knockbackable == null)
             {
-                ApplyKnockback(player.transform, player);
+                knockbackable = other.GetComponentInParent<IKnockbackable>();
+            }
+
+            if (knockbackable != null)
+            {
+                ApplyKnockback(health.transform, knockbackable, overrideDirection);
             }
         }
 
-        private void ApplyKnockback(Transform targetTransform, PlayerController player)
+        private void ApplyKnockback(Transform targetTransform, IKnockbackable target, Vector3? overrideDirection)
         {
-            var center = centerOverride != null ? centerOverride.position : Vector3.zero;
-            var direction = (center - targetTransform.position).normalized;
+            Vector3 direction;
+            
+            if (overrideDirection.HasValue)
+            {
+                direction = overrideDirection.Value;
+            }
+            else
+            {
+                var center = centerOverride != null ? centerOverride.position : transform.position;
+                // Direction from center TO target (push away)
+                direction = (targetTransform.position - center).normalized;
+            }
+
             if (direction.sqrMagnitude < 0.001f)
             {
                 direction = Vector3.up;
             }
 
-            player.ApplyKnockback(direction * knockbackForce);
+            target.ApplyKnockback(direction * knockbackForce);
         }
 
         private void SetupCollider()
@@ -95,7 +130,8 @@ namespace SlopJam.Hazards
             {
                 hazardCollider = gameObject.AddComponent<BoxCollider2D>();
             }
-            hazardCollider.isTrigger = true;
+            // Ensure it is solid, not a trigger, to prevent walking through
+            hazardCollider.isTrigger = false;
         }
 
         private void SetupBody()
