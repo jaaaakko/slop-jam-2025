@@ -38,7 +38,7 @@ namespace SlopJam.Combat
             if (other.TryGetComponent(out HealthComponent health))
             {
                 var request = new DamageRequest(health, damage, instigator, transform.position);
-                damageSystem?.ApplyDamage(request);
+                _ = damageSystem?.ApplyDamage(request);
             }
 
             Destroy(gameObject);

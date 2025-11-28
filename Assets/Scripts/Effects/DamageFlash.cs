@@ -15,6 +15,7 @@ namespace SlopJam.Effects
         private HealthComponent health;
         private Material flashMaterial;
         private Coroutine flashRoutine;
+        private WaitForSeconds flashDelay;
         private int lastHealth;
         private static readonly int FlashColorId = Shader.PropertyToID("_FlashColor");
         private static readonly int FlashAmountId = Shader.PropertyToID("_FlashAmount");
@@ -90,6 +91,31 @@ namespace SlopJam.Effects
                 spriteRenderer.color = prevColor;
             }
             flashRoutine = null;
+        }
+
+        private void ApplyFlashVisuals()
+        {
+            if (flashMaterial != null)
+            {
+                flashMaterial.SetColor(FlashColorId, flashColor);
+                flashMaterial.SetFloat(FlashAmountId, 1f);
+            }
+            else
+            {
+                spriteRenderer.color = flashColor;
+            }
+        }
+
+        private void ResetFlashVisuals()
+        {
+            if (flashMaterial != null)
+            {
+                flashMaterial.SetFloat(FlashAmountId, 0f);
+            }
+            else
+            {
+                spriteRenderer.color = originalColor;
+            }
         }
     }
 }

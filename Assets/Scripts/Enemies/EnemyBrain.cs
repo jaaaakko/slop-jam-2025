@@ -68,7 +68,7 @@ namespace SlopJam.Enemies
             if (target.TryGetComponent(out HealthComponent targetHealth))
             {
                 var request = new DamageRequest(targetHealth, config.damage, gameObject, target.position);
-                damageSystem?.ApplyDamage(request);
+                _ = damageSystem?.ApplyDamage(request);
             }
 
             StartCoroutine(AttackCooldown());

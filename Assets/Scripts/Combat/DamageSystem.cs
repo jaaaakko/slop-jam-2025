@@ -8,15 +8,15 @@ namespace SlopJam.Combat
     /// </summary>
     public class DamageSystem : MonoBehaviour
     {
-        public void ApplyDamage(DamageRequest request)
+        public bool ApplyDamage(DamageRequest request)
         {
             if (request.Target == null)
             {
                 Debug.LogWarning("DamageRequest has no target.");
-                return;
+                return false;
             }
 
-            request.Target.ApplyDamage(request);
+            return request.Target.ApplyDamage(request);
         }
     }
 }

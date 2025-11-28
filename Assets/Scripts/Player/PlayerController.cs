@@ -14,23 +14,27 @@ namespace SlopJam.Player
         [SerializeField] private Transform aimPivot;
         [SerializeField] private DirectionalSprite directionalSprite;
 
+        [Header("Knockback")]
+        [SerializeField] private float knockbackDamping = 8f;
+
         private PlayerRuntime runtime;
         private InputService inputService;
         private Vector3 aimDirection = Vector3.up;
+        private Vector3 externalVelocity = Vector3.zero;
         
         private void Awake()
         {
             runtime = GetComponent<PlayerRuntime>();
             if (directionalSprite == null) directionalSprite = GetComponent<DirectionalSprite>();
+            if (knockbackDamping <= 0f)
+            {
+                knockbackDamping = 8f;
+            }
         }
 
         private void Start()
         {
-            if (ServiceLocator.TryResolve(out InputService resolved))
-            {
-                inputService = resolved;
-                inputService.SetAimOrigin(transform);
-            }
+            TryResolveInputService();
 
             // Fallback: try to find Muzzle if aimPivot is missing
             if (aimPivot == null && runtime.Weapon != null)
@@ -43,6 +47,11 @@ namespace SlopJam.Player
 
         private void Update()
         {
+            if (inputService == null)
+            {
+                TryResolveInputService();
+            }
+
             if (inputService == null || runtime.Config == null)
             {
                 return;
@@ -56,8 +65,14 @@ namespace SlopJam.Player
         {
             var moveInput = inputService.Move;
             var movement = new Vector3(moveInput.x, moveInput.y, 0f);
-            var displacement = movement * runtime.Config.moveSpeed * Time.deltaTime;
+            var baseVelocity = movement * runtime.Config.moveSpeed;
+            var displacement = (baseVelocity + externalVelocity) * Time.deltaTime;
             transform.position += displacement;
+
+            if (externalVelocity.sqrMagnitude > 0.0001f)
+            {
+                externalVelocity = Vector3.MoveTowards(externalVelocity, Vector3.zero, knockbackDamping * Time.deltaTime);
+            }
 
             var aim = inputService.Aim;
             if (aim.sqrMagnitude > 0.0001f)
@@ -98,6 +113,28 @@ namespace SlopJam.Player
 
             var direction = aimDirection.sqrMagnitude > 0.0001f ? aimDirection : transform.up;
             runtime.Weapon.TryShoot(direction);
+        }
+
+        public void ApplyKnockback(Vector3 impulse)
+        {
+            externalVelocity += impulse;
+        }
+
+        private void TryResolveInputService()
+        {
+            if (ServiceLocator.TryResolve(out InputService resolved))
+            {
+                inputService = resolved;
+            }
+            else
+            {
+                inputService = FindFirstObjectByType<InputService>();
+            }
+
+            if (inputService != null)
+            {
+                inputService.SetAimOrigin(transform);
+            }
         }
     }
 }
